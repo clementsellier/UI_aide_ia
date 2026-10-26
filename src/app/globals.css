@@ -4,6 +4,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Valeurs reprises de src/lib/tokens.ts (source de vérité) :
+ * toute modification de couleur ou de rayon doit être faite dans les deux fichiers.
+ */
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -28,76 +33,109 @@
 
   /* Charte Surcouche IA */
   --color-coral: var(--coral);
+  --color-coral-soft: var(--coral-soft);
   --color-teal: var(--teal);
+  --color-teal-soft: var(--teal-soft);
+  --color-tint: var(--tint);
+  --color-input-bg: var(--input-bg);
+  --color-placeholder: var(--placeholder);
   --color-urgent: var(--urgent);
   --color-important: var(--important);
   --color-souhaitable: var(--souhaitable);
   --color-inactive: var(--inactive);
+  --color-inactive-foreground: var(--inactive-foreground);
 
+  /* Largeurs de page (tokens.size), marges latérales md:px-8 comprises : 64 px */
+  --container-page: 884px; /* formulaires : colonne de 820 px */
+  --container-page-large: 1104px; /* accueil : colonne de 1040 px */
+  --container-page-wide: 1344px; /* réponses de l'IA : colonne de 1280 px */
+
+  /* Interligne « normal » comme dans Figma (tokens.fontSize) */
+  --text-xs--line-height: normal;
+  --text-sm--line-height: normal;
+  --text-base--line-height: normal;
+  --text-lg--line-height: normal;
+  --text-xl--line-height: normal;
+
+  /* Rayons (tokens.radius) */
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-lg: var(--radius); /* control : champs, boutons, priorités */
+  --radius-xl: 14px; /* card : cartes, bandeaux, éléments de liste */
+  --radius-2xl: 16px; /* cardLarge : carte de bienvenue, état vide */
+  --radius-bar: 2px; /* filet des cartes de niveau */
+  --radius-button-lg: 12px; /* boutons 48 px */
 }
 
-/* Thème clair (maquettes 1 à 5) */
+/* Thème clair */
 :root {
-  --background: #faf6f0;
-  --foreground: #1f1e1b;
+  --background: #f5f4ef; /* sable100 */
+  --foreground: #1f1e1b; /* encre900 */
   --card: #ffffff;
   --card-foreground: #1f1e1b;
   --popover: #ffffff;
   --popover-foreground: #1f1e1b;
-  --primary: #d97757;
+  --primary: #1f1e1b; /* bouton principal : encre900 */
   --primary-foreground: #ffffff;
-  --secondary: #f3ece2;
+  --secondary: #f5efe7; /* sable150 */
   --secondary-foreground: #1f1e1b;
-  --muted: #f3ece2;
-  --muted-foreground: #6b665d;
-  --accent: #f3ece2;
+  --muted: #f5efe7; /* sable150 */
+  --muted-foreground: #6b6358; /* gris600 */
+  --accent: #f5efe7; /* sable150 (survol shadcn) */
   --accent-foreground: #1f1e1b;
   --destructive: #d9534f;
-  --border: #e8dfd2;
-  --input: #e8dfd2;
-  --ring: #d97757;
-  --radius: 0.75rem;
+  --border: #e8e0d5; /* sable300 */
+  --input: #e8e0d5; /* sable300 */
+  --ring: #d97757; /* terracotta500 */
+  --radius: 10px;
 
-  --coral: #d97757;
-  --teal: #4f8f80;
+  --coral: #d97757; /* terracotta500 */
+  --coral-soft: #f8e6dc; /* terracotta100 */
+  --teal: #4f8f80; /* eau600 */
+  --teal-soft: #ddefea; /* eau100 */
+  --tint: #f5efe7; /* sable150 */
+  --input-bg: #fbf8f3; /* sable50 */
+  --placeholder: #948b7e; /* gris500 */
   --urgent: #d9534f;
   --important: #e8913a;
-  --souhaitable: #4f8f80;
-  --inactive: #d6d0c6;
+  --souhaitable: #4f8f80; /* eau600 */
+  --inactive: #ece8e0; /* sable200 */
+  --inactive-foreground: #9a9488; /* gris400 */
 }
 
-/* Thème sombre (à finaliser plus tard) */
+/* Thème sombre (valeurs « proposé » dans tokens.ts à valider) */
 .dark {
-  --background: #161512;
-  --foreground: #f5f3ee;
-  --card: #211f1b;
+  --background: #161512; /* nuit950 */
+  --foreground: #f5f3ee; /* nuitBlanc */
+  --card: #211f1b; /* nuit850 */
   --card-foreground: #f5f3ee;
   --popover: #211f1b;
   --popover-foreground: #f5f3ee;
-  --primary: #e38b6b;
+  --primary: #e38b6b; /* terracotta400 : le bouton principal est l'accent */
   --primary-foreground: #161512;
-  --secondary: #2b2924;
+  --secondary: #1a1814; /* nuit900 */
   --secondary-foreground: #f5f3ee;
-  --muted: #2b2924;
-  --muted-foreground: #a8a297;
-  --accent: #2b2924;
+  --muted: #1a1814;
+  --muted-foreground: #a8a196; /* nuitGris300 */
+  --accent: #1a1814;
   --accent-foreground: #f5f3ee;
   --destructive: #e06a66;
-  --border: #36332d;
-  --input: #36332d;
+  --border: #37342d; /* nuit700 */
+  --input: #37342d;
   --ring: #e38b6b;
 
   --coral: #e38b6b;
-  --teal: #5fa697;
+  --coral-soft: #3a2620;
+  --teal: #6fb3a3; /* eau400 */
+  --teal-soft: #1d2c28;
+  --tint: #1a1814;
+  --input-bg: #1a1814;
+  --placeholder: #7d766b; /* nuitGris500 */
   --urgent: #e06a66;
-  --important: #eda052;
-  --souhaitable: #5fa697;
-  --inactive: #4a463f;
+  --important: #eda04f;
+  --souhaitable: #6fb3a3; /* eau400 */
+  --inactive: #2a2722;
+  --inactive-foreground: #7d766b;
 }
 
 @layer base {
