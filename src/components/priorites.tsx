@@ -10,6 +10,7 @@ const priorites: { valeur: Priorite; libelle: string; actif: string }[] = [
 
 interface PrioritesProps {
   valeur: Priorite;
+  onChange: (priorite: Priorite) => void;
   /** Identifiant du libellé qui nomme le groupe (accessibilité). */
   libelleId?: string;
   libelle?: string;
@@ -17,8 +18,8 @@ interface PrioritesProps {
   boutonClassName?: string;
 }
 
-/** Les trois boutons de priorité. Interface statique : le choix n'est pas encore modifiable. */
-export function Priorites({ valeur, libelleId, libelle, className, boutonClassName }: PrioritesProps) {
+/** Les trois boutons de priorité, à choix unique. */
+export function Priorites({ valeur, onChange, libelleId, libelle, className, boutonClassName }: PrioritesProps) {
   return (
     <div
       role="radiogroup"
@@ -31,8 +32,10 @@ export function Priorites({ valeur, libelleId, libelle, className, boutonClassNa
         return (
           <Button
             key={p.valeur}
+            type="button"
             role="radio"
             aria-checked={actif}
+            onClick={() => onChange(p.valeur)}
             className={cn(
               "h-9 font-semibold",
               actif ? cn(p.actif, "text-white") : "bg-inactive text-inactive-foreground hover:bg-inactive/80",

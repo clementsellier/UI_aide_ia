@@ -1,24 +1,30 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
 
 import { CarteFilet } from "@/components/carte-filet";
 import { Priorites } from "@/components/priorites";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { casDemo, organisationDemo } from "@/lib/demo";
+import { useAppStore, useStoreCharge } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
-// Écrans 2 et 3 · Accueil (maquettes Figma 17:2 et 17:34). Interface statique :
-// en attendant le store, « ?vue=liste » affiche l'état avec cas d'usage (écran 3).
+// Écrans 2 et 3 · Accueil sans cas d'usage / avec cas d'usage (maquettes Figma 17:2 et 17:34).
 const boutonCorail = cn(
   buttonVariants(),
   "rounded-button-lg bg-coral font-semibold text-white hover:bg-coral/90",
 );
 
-export default function AccueilPage({ searchParams }: PageProps<"/accueil">) {
+export default function AccueilPage() {
+  const charge = useStoreCharge();
+  const nom = useAppStore((s) => s.organisation?.nom);
+  const avecCas = useAppStore((s) => s.cas.length > 0);
+
   return (
     <main className="mx-auto w-full max-w-page-large px-4 pt-10 pb-12 leading-[normal] md:px-8">
-      <h1 className="text-[28px] leading-[normal] font-semibold">Bonjour, {organisationDemo.nom}</h1>
+      <h1 className="text-[28px] leading-[normal] font-semibold">
+        Bonjour{charge && nom ? `, ${nom}` : ""}
+      </h1>
 
       <Link
         href="/organisation"
@@ -27,23 +33,11 @@ export default function AccueilPage({ searchParams }: PageProps<"/accueil">) {
         Voir le détail de mon organisation&nbsp;&nbsp;→
       </Link>
 
-      <Suspense>
-        {searchParams.then(({ vue }) => (
-          <Contenu avecCas={vue === "liste"} />
-        ))}
-      </Suspense>
-    </main>
-  );
-}
-
-function Contenu({ avecCas }: { avecCas: boolean }) {
-  return (
-    <>
       <CarteFilet filet="bg-coral" className="mt-[23px] min-h-44 rounded-2xl bg-card py-6 pr-6 pl-[30px]">
         <p className="text-base">
           Je vais vous aider à définir les cas d&apos;usage de l&apos;intelligence artificielle dans votre société.
         </p>
-        {!avecCas && (
+        {charge && !avecCas && (
           <p className="mt-[26px] text-sm text-muted-foreground">
             Entrez chacun de vos cas d&apos;usage concrets et je vous proposerai des solutions pour vous permettre
             d&apos;être plus efficace avec l&apos;intelligence artificielle générative.
@@ -51,8 +45,8 @@ function Contenu({ avecCas }: { avecCas: boolean }) {
         )}
       </CarteFilet>
 
-      {avecCas ? <ListeCas /> : <EtatVide />}
-    </>
+      {charge && (avecCas ? <ListeCas /> : <EtatVide />)}
+    </main>
   );
 }
 
@@ -75,6 +69,9 @@ function EtatVide() {
 }
 
 function ListeCas() {
+  const cas = useAppStore((s) => s.cas);
+  const setPriorite = useAppStore((s) => s.setPriorite);
+
   return (
     <section className="mt-[69px]">
       <div className="flex items-center justify-between gap-4">
@@ -85,21 +82,26 @@ function ListeCas() {
       </div>
 
       <ul className="mt-3 flex flex-col gap-3">
-        {casDemo.map((cas, index) => (
-          <li key={cas.id}>
+        {cas.map((c, index) => (
+          <li key={c.id}>
             <CarteFilet
               filet={index % 2 === 0 ? "bg-teal" : "bg-coral"}
               className="flex min-h-[66px] flex-wrap items-center justify-between gap-3 rounded-xl bg-card py-3 pr-4 pl-[26px]"
             >
-              <Link href={`/cas-usage/${cas.id}`} className="group">
+              <Link href={`/cas-usage/${c.id}`} className="group">
                 <p className="text-base leading-[normal] font-semibold group-hover:underline">
-                  {index + 1}&nbsp;&nbsp;{cas.titre}
+                  {index + 1}&nbsp;&nbsp;{c.titre || "Cas sans titre"}
                 </p>
                 <p className="mt-[7px] text-[13px] leading-[normal] text-muted-foreground">
-                  {cas.niveaux ? "Niveaux 1 · 2 · 3 disponibles" : "Niveaux à générer"}
+                  {c.niveaux ? "Niveaux 1 · 2 · 3 disponibles" : "Niveaux à générer"}
                 </p>
               </Link>
-              <Priorites valeur={cas.priorite} libelle={`Priorité de « ${cas.titre} »`} boutonClassName="w-[110px]" />
+              <Priorites
+                valeur={c.priorite}
+                onChange={(priorite) => setPriorite(c.id, priorite)}
+                libelle={`Priorité de « ${c.titre} »`}
+                boutonClassName="w-[110px]"
+              />
             </CarteFilet>
           </li>
         ))}

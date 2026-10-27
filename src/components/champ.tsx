@@ -24,12 +24,13 @@ export function Champ({ id, libelle, placeholder, defaultValue, hauteurZone }: C
       {hauteurZone ? (
         <Textarea
           id={id}
+          name={id}
           placeholder={placeholder}
           defaultValue={defaultValue}
           className={cn(styleChamp, hauteurZone, "resize-none py-3.5")}
         />
       ) : (
-        <Input id={id} placeholder={placeholder} defaultValue={defaultValue} className={styleChamp} />
+        <Input id={id} name={id} placeholder={placeholder} defaultValue={defaultValue} className={styleChamp} />
       )}
     </div>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { CasUsage, ContexteEntreprise, Niveaux, Organisation, Priorite } from "./types";
@@ -50,3 +51,15 @@ export const useAppStore = create<AppState>()(
     { name: "aide-ia" },
   ),
 );
+
+/**
+ * Vrai une fois les données du navigateur chargées. Le serveur ne les connaît pas : afficher
+ * avant ce moment provoquerait un décalage entre le HTML serveur et le premier rendu client.
+ */
+export function useStoreCharge() {
+  return useSyncExternalStore(
+    (onChange) => useAppStore.persist.onFinishHydration(onChange),
+    () => useAppStore.persist.hasHydrated(),
+    () => false,
+  );
+}
