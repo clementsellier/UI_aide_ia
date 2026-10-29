@@ -30,7 +30,8 @@ const niveaux: { cle: keyof Niveaux; surtitre: string; titre: string; descriptio
     cle: "agent",
     surtitre: "Niveau 3 · Agent",
     titre: "Agent IA connecté",
-    description: "Un agent relié à vos outils agit pour vous, et vous soumet chaque envoi pour validation.",
+    description:
+      "Un agent relié à vos outils agit pour vous : certains envois partent automatiquement, les autres après votre validation.",
   },
 ];
 

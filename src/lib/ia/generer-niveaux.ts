@@ -5,12 +5,25 @@ import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 
 import type { Niveaux } from "@/lib/types";
 
-import { construireMessage, PROMPT_SYSTEME } from "./prompt";
+import { VERSION_ACTIVE, versions, type NomVersion } from "./prompts";
 import { niveauxSchema, type DemandeNiveaux } from "./schemas";
 
 // Claude Opus 5.5 : le plus capable de la gamme Opus pour du conseil adapté à des cas très variés.
 // Effort « medium » (valeur par défaut du modèle, fixée explicitement) : bon équilibre qualité / temps d'attente.
-const MODELE = "claude-opus-5-5";
+export const MODELE = "claude-opus-5-5";
+export const EFFORT: Effort = "medium";
+
+/** Modèles comparés par le script d'évaluation (l'application utilise toujours MODELE). */
+export const MODELES = ["claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5"] as const;
+export type Modele = (typeof MODELES)[number];
+export type Effort = "low" | "medium" | "high" | "xhigh" | "max";
+
+/** Réglages d'un appel ; seul le script d'évaluation s'écarte des valeurs par défaut. */
+export interface ReglagesGeneration {
+  version?: NomVersion;
+  modele?: Modele;
+  effort?: Effort;
+}
 
 /** Erreur prévue, avec un message affichable et le statut HTTP à renvoyer par le relais. */
 export class ErreurIA extends Error {
@@ -24,7 +37,18 @@ export class ErreurIA extends Error {
 
 let client: Anthropic | undefined;
 
-export async function genererNiveaux(demande: DemandeNiveaux): Promise<Niveaux> {
+export interface GenerationNiveaux {
+  niveaux: Niveaux;
+  /** Tokens consommés (entrée, cache, sortie dont réflexion) : lus par le script d'évaluation. */
+  consommation: Anthropic.Beta.BetaUsage;
+}
+
+/** Génère les trois niveaux d'un cas. */
+export async function genererNiveaux(
+  demande: DemandeNiveaux,
+  { version = VERSION_ACTIVE, modele = MODELE, effort = EFFORT }: ReglagesGeneration = {},
+): Promise<GenerationNiveaux> {
+  const prompt = versions[version];
   if (!process.env.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_AUTH_TOKEN) {
     throw new ErreurIA("La clé API Anthropic n'est pas configurée sur le serveur (fichier .env.local).", 500);
   }
@@ -33,14 +57,19 @@ export async function genererNiveaux(demande: DemandeNiveaux): Promise<Niveaux> 
   let reponse;
   try {
     reponse = await client.beta.messages.parse({
-      model: MODELE,
+      model: modele,
       max_tokens: 16000,
       // Si le modèle décline la demande, l'API la relance d'elle-même sur le modèle de repli recommandé.
-      betas: ["server-side-fallback-2026-07-01"],
-      fallbacks: "default",
-      output_config: { effort: "medium", format: betaZodOutputFormat(niveauxSchema) },
-      system: PROMPT_SYSTEME,
-      messages: [{ role: "user", content: construireMessage(demande) }],
+      // Haiku 5.5 n'a pas de modèle de repli : le paramètre n'est pas envoyé.
+      ...(modele !== "claude-haiku-5-5" && {
+        betas: ["server-side-fallback-2026-07-01"],
+        fallbacks: "default" as const,
+      }),
+      output_config: { effort, format: betaZodOutputFormat(niveauxSchema) },
+      // Le prompt système est identique d'une requête à l'autre : mis en cache, il est refacturé à prix réduit
+      // (et lu plus vite) tant que les requêtes se suivent à moins de 5 minutes.
+      system: [{ type: "text", text: prompt.systeme, cache_control: { type: "ephemeral" } }],
+      messages: [{ role: "user", content: prompt.construireMessage(demande) }],
     });
   } catch (erreur) {
     throw traduireErreur(erreur);
@@ -53,7 +82,7 @@ export async function genererNiveaux(demande: DemandeNiveaux): Promise<Niveaux> 
     console.error("Réponse IA incomplète :", reponse.stop_reason);
     throw new ErreurIA("La réponse de l'IA est incomplète. Réessayez.", 502);
   }
-  return reponse.parsed_output;
+  return { niveaux: reponse.parsed_output, consommation: reponse.usage };
 }
 
 function traduireErreur(erreur: unknown) {

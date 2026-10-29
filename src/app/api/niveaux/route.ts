@@ -18,8 +18,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const niveaux: Niveaux = await genererNiveaux(demande.data);
-    return Response.json(niveaux);
+    const { niveaux } = await genererNiveaux(demande.data);
+    return Response.json(niveaux satisfies Niveaux);
   } catch (e) {
     if (e instanceof ErreurIA) return erreur(e.message, e.status);
     console.error("Relais /api/niveaux :", e);

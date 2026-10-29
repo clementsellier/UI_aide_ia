@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 import { CarteFilet } from "@/components/carte-filet";
 import { Priorites } from "@/components/priorites";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { exporterExcel } from "@/lib/export-excel";
 import { useAppStore, useStoreCharge } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -71,14 +73,38 @@ function EtatVide() {
 function ListeCas() {
   const cas = useAppStore((s) => s.cas);
   const setPriorite = useAppStore((s) => s.setPriorite);
+  const nom = useAppStore((s) => s.organisation?.nom);
+  const [export_, setExport] = useState<"pret" | "en-cours" | "erreur">("pret");
+
+  async function exporter() {
+    setExport("en-cours");
+    try {
+      await exporterExcel(cas, nom);
+      setExport("pret");
+    } catch (e) {
+      console.error("Export Excel :", e);
+      setExport("erreur");
+    }
+  }
 
   return (
     <section className="mt-[69px]">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <h2 className="pl-1.5 text-lg leading-[normal] font-semibold">Vos cas d&apos;usage</h2>
-        <Button className="h-10 w-[260px] bg-coral font-semibold text-white hover:bg-coral/90">
-          Exporter en Excel
-        </Button>
+        <div className="flex items-center gap-3">
+          {export_ === "erreur" && (
+            <p role="alert" className="text-sm text-destructive">
+              L&apos;export a échoué, réessayez.
+            </p>
+          )}
+          <Button
+            onClick={exporter}
+            disabled={export_ === "en-cours"}
+            className="h-10 w-[260px] bg-coral font-semibold text-white hover:bg-coral/90"
+          >
+            {export_ === "en-cours" ? "Préparation du fichier…" : "Exporter en Excel"}
+          </Button>
+        </div>
       </div>
 
       <ul className="mt-3 flex flex-col gap-3">

@@ -1,0 +1,55 @@
+{
+  "description": "Cas imaginés pour une maison de luxe, variés en fonction, priorité et niveau de détail. Les processus décrits sont fictifs. Pas de réponse attendue : les résultats sont relus à la main.",
+  "organisation": {
+    "nom": "Maison de luxe (fictive)",
+    "nature": "societe",
+    "natureAutre": "",
+    "activite": "Maison de luxe italienne : maroquinerie, prêt-à-porter et accessoires, vendus en boutiques et sur un site e-commerce dans plusieurs pays."
+  },
+  "cas": [
+    {
+      "id": "luxe-fiches-produits",
+      "fonction": "Marketing et communication",
+      "titre": "Adapter les fiches produits pour chaque pays",
+      "description": "Je veux décliner les descriptions des produits du site e-commerce dans plusieurs langues, en respectant l’univers de la marque.",
+      "situationActuelle": "Les fiches sont rédigées en italien, puis envoyées à une agence de traduction. Il faut 2 semaines par collection, et certaines traductions perdent le style de la maison.",
+      "situationSouhaitee": "La solution propose des fiches dans chaque langue, adaptées à la culture locale et conformes à notre charte éditoriale. Les équipes locales n’ont plus qu’à valider.",
+      "gainEspere": "",
+      "priorite": "important",
+      "attendu": null
+    },
+    {
+      "id": "luxe-formation-conseillers",
+      "fonction": "Ressources humaines",
+      "titre": "Former les nouveaux conseillers de vente",
+      "description": "Je veux que les nouveaux conseillers connaissent rapidement l’histoire de la maison, les matières et les codes du service.",
+      "situationActuelle": "La formation se fait sur 2 jours au siège, avec un classeur de 150 pages. Les conseillers ont ensuite du mal à retrouver une information précise face au client.",
+      "situationSouhaitee": "Un assistant répond aux questions des conseillers sur les produits, les matières et les procédures, et leur propose des quiz pour vérifier leurs connaissances.",
+      "gainEspere": "",
+      "priorite": "souhaitable",
+      "attendu": null
+    },
+    {
+      "id": "luxe-conformite-fournisseurs",
+      "fonction": "Achats et développement durable",
+      "titre": "Contrôler la conformité des fournisseurs",
+      "description": "Je veux vérifier plus facilement que les documents des fournisseurs (certificats, audits, traçabilité du cuir) sont complets et à jour.",
+      "situationActuelle": "Les documents sont envoyés par email et rangés dans des dossiers partagés. Un acheteur vérifie tout à la main dans un tableau Excel, et des certificats expirés sont parfois repérés trop tard.",
+      "situationSouhaitee": "La solution lit chaque document, remplit le tableau de suivi, signale les documents manquants ou bientôt expirés, et prépare l’email de relance au fournisseur.",
+      "gainEspere": "",
+      "priorite": "urgent",
+      "attendu": null
+    },
+    {
+      "id": "luxe-synthese-ventes",
+      "fonction": "Direction",
+      "titre": "Synthèse des ventes hebdomadaires",
+      "description": "Avoir chaque lundi un résumé des ventes.",
+      "situationActuelle": "Je lis plusieurs fichiers Excel.",
+      "situationSouhaitee": "Un résumé clair avec les points d’alerte.",
+      "gainEspere": "",
+      "priorite": "souhaitable",
+      "attendu": null
+    }
+  ]
+}
