@@ -72,7 +72,7 @@ L'agent IA est connecté à la messagerie, au CRM et au logiciel de devis :
 - il m'envoie le devis pour validation, sans l'envoyer au client
 - après mon accord, il envoie le devis par email et programme une relance à J+7 si le client ne répond pas
 
-**Vos remarques** :
+**Vos remarques** : 
 
 
 ## Relance commerciale

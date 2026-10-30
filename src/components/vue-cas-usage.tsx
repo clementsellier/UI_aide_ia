@@ -15,7 +15,7 @@ const niveaux: { cle: keyof Niveaux; surtitre: string; titre: string; descriptio
   {
     cle: "chat",
     surtitre: "Niveau 1 · Chat",
-    titre: "Demander dans le chat",
+    titre: "Utilisation du mode conversation de l'IA",
     description:
       "Vous utilisez un assistant conversationnel, sans préparation : vous lui écrivez votre demande et joignez vos documents.",
   },
@@ -106,11 +106,16 @@ export function VueCasUsage({ id }: { id: string }) {
           </Button>
         </div>
       ) : (
-        <p className="mt-5 text-sm text-muted-foreground" aria-live="polite">
-          {cas?.niveaux || !charge
-            ? "Réponses générées par notre IA : vous pouvez les compléter ou les modifier."
-            : "Notre IA rédige les réponses adaptées à votre cas, cela prend quelques secondes…"}
-        </p>
+        <div>
+          <p className="mt-5 text-l text-muted-foreground font-bold">
+            <br/>Voici 3 manières d'utiliser l'intelligence artificielle générative dans votre cas d'usage.
+          </p>
+          <p className="mt-5 text-sm text-muted-foreground" aria-live="polite">
+            {cas?.niveaux || !charge
+              ? "Réponses générées automatiquement par notre IA : vous pouvez les compléter ou les modifier."
+              : "Notre IA rédige les réponses adaptées à votre cas, cela prend quelques secondes…"}
+          </p>
+        </div>
       )}
 
       <div className="mt-3 grid gap-5 md:grid-cols-3">
