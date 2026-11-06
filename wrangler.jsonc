@@ -2,6 +2,10 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "aide-ia",
 	"main": ".open-next/worker.js",
+	// Adresse publique aide-ia.<sous-domaine>.workers.dev (à protéger par Cloudflare Access)
+	"workers_dev": true,
+	// Pas d'adresse publique supplémentaire par version déployée
+	"preview_urls": false,
 	"compatibility_date": "2026-11-01",
 	"compatibility_flags": [
 		"nodejs_compat",
