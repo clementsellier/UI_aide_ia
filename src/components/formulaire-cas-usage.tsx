@@ -86,6 +86,9 @@ function Formulaire({ cas }: { cas?: CasUsage }) {
 
   return (
     <form onSubmit={valider} className="mt-6 flex flex-col gap-5">
+      <p className="rounded-lg bg-tint px-4 py-3 text-sm">
+        Ne saisissez pas de données personnelles (noms de clients, de salariés, etc.).
+      </p>
       <Champ
         id="fonction"
         libelle="Fonction de l'organisation concernée"

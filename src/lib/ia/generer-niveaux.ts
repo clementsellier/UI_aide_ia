@@ -8,9 +8,10 @@ import type { Niveaux } from "@/lib/types";
 import { VERSION_ACTIVE, versions, type NomVersion } from "./prompts";
 import { niveauxSchema, type DemandeNiveaux } from "./schemas";
 
-// Claude Opus 5.5 : le plus capable de la gamme Opus pour du conseil adapté à des cas très variés.
-// Effort « medium » (valeur par défaut du modèle, fixée explicitement) : bon équilibre qualité / temps d'attente.
-export const MODELE = "claude-opus-5-5";
+// Version de test : Claude Haiku 5.5, le moins coûteux et le plus rapide, jusqu'à la fin des essais.
+// Pour la version définitive, repasser à "claude-opus-5-5" (meilleur conseil sur des cas très variés).
+// Effort « medium » : bon équilibre qualité / temps d'attente (évalué sur Haiku 5.5 le 2026-10-28).
+export const MODELE: Modele = "claude-haiku-5-5";
 export const EFFORT: Effort = "medium";
 
 /** Modèles comparés par le script d'évaluation (l'application utilise toujours MODELE). */

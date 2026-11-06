@@ -12,10 +12,25 @@ interface ChampProps {
   defaultValue?: string;
   /** Hauteur d'une zone de texte multiligne ; sans hauteur, le champ tient sur une ligne. */
   hauteurZone?: string;
+  /** Attributs du champ d'une ligne (formulaires de connexion). */
+  type?: "text" | "email" | "password";
+  autoComplete?: string;
+  required?: boolean;
+  minLength?: number;
 }
 
 /** Libellé + champ de saisie, tels que dessinés dans les formulaires des maquettes. */
-export function Champ({ id, libelle, placeholder, defaultValue, hauteurZone }: ChampProps) {
+export function Champ({
+  id,
+  libelle,
+  placeholder,
+  defaultValue,
+  hauteurZone,
+  type = "text",
+  autoComplete,
+  required,
+  minLength,
+}: ChampProps) {
   return (
     <div className="flex flex-col gap-2">
       <Label htmlFor={id} className="leading-[normal] font-semibold">
@@ -30,7 +45,17 @@ export function Champ({ id, libelle, placeholder, defaultValue, hauteurZone }: C
           className={cn(styleChamp, hauteurZone, "resize-none py-3.5")}
         />
       ) : (
-        <Input id={id} name={id} placeholder={placeholder} defaultValue={defaultValue} className={styleChamp} />
+        <Input
+          id={id}
+          name={id}
+          type={type}
+          placeholder={placeholder}
+          defaultValue={defaultValue}
+          autoComplete={autoComplete}
+          required={required}
+          minLength={minLength}
+          className={styleChamp}
+        />
       )}
     </div>
   );

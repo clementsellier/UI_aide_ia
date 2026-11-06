@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { CarteFilet } from "@/components/carte-filet";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { demanderNiveaux } from "@/lib/ia/client";
+import { demanderNiveaux, ErreurSession } from "@/lib/ia/client";
 import { useAppStore, useStoreCharge } from "@/lib/store";
 import type { Niveaux } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -44,6 +45,8 @@ export function VueCasUsage({ id }: { id: string }) {
   const cas = useAppStore((s) => s.cas.find((c) => c.id === id));
   const setNiveaux = useAppStore((s) => s.setNiveaux);
   const [erreur, setErreur] = useState<string | null>(null);
+  const router = useRouter();
+  const chemin = usePathname();
 
   const aGenerer = charge && cas !== undefined && cas.niveaux === null && erreur === null;
 
@@ -59,9 +62,12 @@ export function VueCasUsage({ id }: { id: string }) {
     }
     generation.then(
       (resultat) => setNiveaux(id, resultat),
-      (e: Error) => setErreur(e.message),
+      (e: Error) => {
+        setErreur(e.message);
+        if (e instanceof ErreurSession) router.replace(`/connexion?retour=${encodeURIComponent(chemin)}`);
+      },
     );
-  }, [aGenerer, id, setNiveaux]);
+  }, [aGenerer, id, setNiveaux, router, chemin]);
 
   if (charge && !cas) {
     return (

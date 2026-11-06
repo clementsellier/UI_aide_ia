@@ -2,6 +2,13 @@ import type { CasUsage, ContexteEntreprise, Niveaux, Organisation } from "@/lib/
 
 import type { DemandeNiveaux, ErreurNiveaux } from "./schemas";
 
+/** Session absente ou expirée côté serveur : l'écran renvoie vers la connexion. */
+export class ErreurSession extends Error {
+  constructor() {
+    super("Votre session a expiré. Reconnectez-vous.");
+  }
+}
+
 /** Appelle le relais serveur pour générer les trois niveaux d'un cas d'usage (côté navigateur). */
 export async function demanderNiveaux(
   organisation: Organisation | null,
@@ -34,6 +41,9 @@ export async function demanderNiveaux(
     throw new Error("Impossible de joindre le serveur. Vérifiez votre connexion puis réessayez.");
   }
 
+  if (reponse.status === 401) throw new ErreurSession();
+
+  // 429 : quota du jour atteint ou demande trop rapprochée ; le message vient du serveur.
   const corps = (await reponse.json().catch(() => null)) as Niveaux | ErreurNiveaux | null;
   if (!reponse.ok || !corps || "erreur" in corps) {
     throw new Error(corps && "erreur" in corps ? corps.erreur : "Erreur inattendue du serveur.");

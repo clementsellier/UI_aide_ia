@@ -2,7 +2,13 @@
 
 Interface web (surcouche de l'API Claude) qui aide un dirigeant à décrire son entreprise et ses cas d'usage, puis lui propose trois niveaux d'utilisation de l'IA : conversation simple, conversation enrichie (compétences et documents), agent connecté aux outils.
 
-Phase actuelle : visuels uniquement (écrans 1 à 5 de la maquette Figma). Le backend Claude viendra ensuite.
+Phase actuelle : **version de test**. L'application est complète mais tourne en local : comptes et données sont enregistrés dans le navigateur, la connexion est simulée (voir ci-dessous) et l'IA utilise Claude Haiku 5.5.
+
+## Connexion (version de test)
+
+- Création de compte avec mot de passe (adresse à confirmer), connexion par mot de passe ou par lien reçu par e-mail, mot de passe oublié, page « Mon compte » (export et suppression des données).
+- Aucun e-mail n'est envoyé : les messages apparaissent dans la **Boîte e-mail de test**, en bas à gauche de l'écran.
+- Simulation sans sécurité réelle, prévue pour être remplacée par Better Auth : voir `docs/decisions.md`.
 
 ## Stack
 
@@ -14,21 +20,19 @@ Phase actuelle : visuels uniquement (écrans 1 à 5 de la maquette Figma). Le ba
 
 ## Démarrer
 
-Prérequis : Node 22.18 ou plus, et Docker (ou un PostgreSQL 16 installé localement).
+Prérequis : Node 22.18 ou plus.
 
 ```bash
 npm install
-cp .env.example .env.local          # puis renseigner les valeurs
-docker compose -f docker-compose.dev.yml up -d   # PostgreSQL sur le port 5432
-npm run db:migrate
+cp .env.example .env.local          # puis renseigner ANTHROPIC_API_KEY
 npm run dev
 ```
 
 Puis ouvrir http://localhost:3000.
 
-## Base de données
+## Base de données (pas encore utilisée)
 
-PostgreSQL + Drizzle ORM. Code dans `src/lib/db/`, migrations SQL dans `drizzle/`.
+Préparée pour la suite : PostgreSQL + Drizzle ORM. Code dans `src/lib/db/`, migrations SQL dans `drizzle/`.
 
 | Commande | Rôle |
 | --- | --- |
@@ -36,16 +40,21 @@ PostgreSQL + Drizzle ORM. Code dans `src/lib/db/`, migrations SQL dans `drizzle/
 | `npm run db:migrate` | applique les migrations (sans drizzle-kit, utilisable en production) |
 | `npm run db:studio` | explore la base dans le navigateur |
 
-Arrêter la base : `docker compose -f docker-compose.dev.yml down` (ajouter `-v` pour effacer ses données).
+Démarrer la base : `docker compose -f docker-compose.dev.yml up -d` (Docker Desktop requis). Arrêter la base : `docker compose -f docker-compose.dev.yml down` (ajouter `-v` pour effacer ses données).
 
 ## Organisation
 
 ```
 src/
-  app/            pages (App Router) et styles globaux
+  app/            pages publiques (/, /connexion, /inscription…) et styles globaux
+  app/(app)/      pages réservées aux personnes connectées (en-tête + garde de session)
+  proxy.ts        renvoi vers /connexion sans cookie de session
   components/ui/  composants shadcn/ui
+  components/auth/ formulaires de connexion, en-tête, garde de session, boîte e-mail de test
+  lib/auth-client.ts  point d'entrée de l'authentification (stub aujourd'hui, Better Auth demain)
+  lib/auth-stub/  authentification simulée de la version de test
   lib/types.ts    modèle de données (organisation, contexte, cas d'usage, niveaux)
-  lib/store.ts    état de l'application, persistant dans le navigateur
+  lib/store.ts    état de l'application, enregistré dans le navigateur par compte
 ```
 
 ## Charte
