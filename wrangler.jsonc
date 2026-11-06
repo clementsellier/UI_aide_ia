@@ -1,0 +1,36 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "aide-ia",
+	"main": ".open-next/worker.js",
+	"compatibility_date": "2026-11-01",
+	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+	"assets": {
+		"directory": ".open-next/assets",
+		"binding": "ASSETS"
+	},
+	"services": [
+		{
+			// Référence à lui-même, utilisée par OpenNext (le nom doit être celui du worker)
+			"binding": "WORKER_SELF_REFERENCE",
+			"service": "aide-ia"
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "aide-ia",
+			// À remplacer par l'identifiant affiché par `npx wrangler d1 create aide-ia`
+			// (la valeur actuelle suffit pour la base locale).
+			"database_id": "00000000-0000-0000-0000-000000000000",
+			// Migrations SQL générées par drizzle-kit (npm run db:generate)
+			"migrations_dir": "drizzle"
+		}
+	],
+	"vars": {
+		"QUOTA_GENERATIONS_JOUR": "10"
+	},
+	// Secrets (jamais dans ce fichier) : npx wrangler secret put ANTHROPIC_API_KEY
+	"observability": {
+		"enabled": true
+	}
+}

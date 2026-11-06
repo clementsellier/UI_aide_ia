@@ -25,22 +25,35 @@ Prérequis : Node 22.18 ou plus.
 ```bash
 npm install
 cp .env.example .env.local          # puis renseigner ANTHROPIC_API_KEY
+cp .env.local .dev.vars             # pour npm run preview (moteur Cloudflare)
 npm run dev
 ```
 
 Puis ouvrir http://localhost:3000.
 
-## Base de données (pas encore utilisée)
+## Cloudflare (hébergement prévu)
 
-Préparée pour la suite : PostgreSQL + Drizzle ORM. Code dans `src/lib/db/`, migrations SQL dans `drizzle/`.
+L'application est prévue pour Cloudflare Workers (adaptateur OpenNext) avec une base D1 (SQLite), pas encore utilisée par la version de test.
 
 | Commande | Rôle |
 | --- | --- |
-| `npm run db:generate` | crée une migration après un changement de schéma |
-| `npm run db:migrate` | applique les migrations (sans drizzle-kit, utilisable en production) |
-| `npm run db:studio` | explore la base dans le navigateur |
+| `npm run dev` | développement (Next.js), avec une base D1 locale dans `.wrangler/` |
+| `npm run preview` | construit pour Cloudflare et lance l'app dans le moteur Workers en local (http://localhost:8787) |
+| `npm run deploy` | construit et déploie sur Cloudflare |
+| `npm run cf-typegen` | régénère `cloudflare-env.d.ts` après une modification de `wrangler.jsonc` |
+| `npm run db:generate` | crée une migration SQL après un changement de schéma Drizzle |
+| `npm run db:migrate:local` / `db:migrate:remote` | applique les migrations sur la base locale / en ligne |
 
-Démarrer la base : `docker compose -f docker-compose.dev.yml up -d` (Docker Desktop requis). Arrêter la base : `docker compose -f docker-compose.dev.yml down` (ajouter `-v` pour effacer ses données).
+Pour `npm run preview`, copier `.env.local` en `.dev.vars`. Sous Windows, le build Cloudflare exige le **Mode développeur** (Paramètres › Système › Espace développeurs).
+
+Premier déploiement :
+
+```bash
+npx wrangler login
+npx wrangler d1 create aide-ia                 # copier l'identifiant dans wrangler.jsonc (database_id)
+npx wrangler secret put ANTHROPIC_API_KEY
+npm run deploy
+```
 
 ## Organisation
 
