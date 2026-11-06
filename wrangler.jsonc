@@ -3,7 +3,10 @@
 	"name": "aide-ia",
 	"main": ".open-next/worker.js",
 	"compatibility_date": "2026-11-01",
-	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+	"compatibility_flags": [
+		"nodejs_compat",
+		"global_fetch_strictly_public"
+	],
 	"assets": {
 		"directory": ".open-next/assets",
 		"binding": "ASSETS"
@@ -19,9 +22,8 @@
 		{
 			"binding": "DB",
 			"database_name": "aide-ia",
-			// À remplacer par l'identifiant affiché par `npx wrangler d1 create aide-ia`
-			// (la valeur actuelle suffit pour la base locale).
-			"database_id": "00000000-0000-0000-0000-000000000000",
+			// Base créée par `npx wrangler d1 create aide-ia` (identifiant non secret)
+			"database_id": "acd23de5-74dd-490b-8c3a-f58b47358cfd",
 			// Migrations SQL générées par drizzle-kit (npm run db:generate)
 			"migrations_dir": "drizzle"
 		}
