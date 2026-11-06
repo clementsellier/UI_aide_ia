@@ -14,12 +14,29 @@ Phase actuelle : visuels uniquement (écrans 1 à 5 de la maquette Figma). Le ba
 
 ## Démarrer
 
+Prérequis : Node 22.18 ou plus, et Docker (ou un PostgreSQL 16 installé localement).
+
 ```bash
 npm install
+cp .env.example .env.local          # puis renseigner les valeurs
+docker compose -f docker-compose.dev.yml up -d   # PostgreSQL sur le port 5432
+npm run db:migrate
 npm run dev
 ```
 
 Puis ouvrir http://localhost:3000.
+
+## Base de données
+
+PostgreSQL + Drizzle ORM. Code dans `src/lib/db/`, migrations SQL dans `drizzle/`.
+
+| Commande | Rôle |
+| --- | --- |
+| `npm run db:generate` | crée une migration après un changement de schéma |
+| `npm run db:migrate` | applique les migrations (sans drizzle-kit, utilisable en production) |
+| `npm run db:studio` | explore la base dans le navigateur |
+
+Arrêter la base : `docker compose -f docker-compose.dev.yml down` (ajouter `-v` pour effacer ses données).
 
 ## Organisation
 

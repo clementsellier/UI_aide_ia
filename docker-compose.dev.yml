@@ -1,0 +1,22 @@
+# PostgreSQL pour le développement local uniquement.
+#   docker compose -f docker-compose.dev.yml up -d
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aide_ia
+      POSTGRES_PASSWORD: aide_ia
+      POSTGRES_DB: aide_ia
+    ports:
+      - "5432:5432"
+    volumes:
+      - aide_ia_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aide_ia -d aide_ia"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  aide_ia_pg:

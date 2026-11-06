@@ -108,7 +108,7 @@ export function VueCasUsage({ id }: { id: string }) {
       ) : (
         <div>
           <p className="mt-5 text-l text-muted-foreground font-bold">
-            <br/>Voici 3 manières d'utiliser l'intelligence artificielle générative dans votre cas d'usage.
+            <br/>Voici 3 manières d&apos;utiliser l&apos;intelligence artificielle générative dans votre cas d&apos;usage.
           </p>
           <p className="mt-5 text-sm text-muted-foreground" aria-live="polite">
             {cas?.niveaux || !charge
